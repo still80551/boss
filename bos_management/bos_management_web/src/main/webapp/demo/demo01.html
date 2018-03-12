@@ -28,44 +28,7 @@
 </script>
 
 <script type="text/javascript">
-	/* $(function(){
-		var setting = {	};
 
-		var zNodes = [
-		         	{name: "节点1", children: [
-		         		{name: "子节点11"},
-		         		{name: "子节点12"}
-		         	]},
-		         	{name: "节点2"},
-		         	{name: "节点3"}
-		         	
-		         ]
-		
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-	
-
-	}) */
-	/* $(function(){
-		var setting = {
-				data: {
-					simpleData: {
-						enable: true,
-						idKey: "id",
-						pIdKey: "pId",
-						rootPId: 0
-					}
-				}
-			};
-			var zNodes =
-			    {"id":1, "pId":0, "name":"节点1"},
-			    {"id":11, "pId":1, "name":"节点2"},
-			    {"id":12, "pId":1, "name":"节点3"},
-			    {"id":111, "pId":11, "name":"test111"}
-			];
-			
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-	}) */
-	
 	
 		$(function(){
 		
@@ -76,6 +39,25 @@
 							idKey: "id",
 							pIdKey: "pId",
 							rootPId: 0
+						}
+					},
+					
+					callback: {
+						onClick: function(event, treeId, treeNode){
+							console.log(treeNode)
+							var pId = treeNode.pId
+							if(pId != 0){
+								var flag = $('#tt').tabs('exists',treeNode.name)
+								if(flag){
+									$('#tt').tabs('select',treeNode.name)
+								}else{
+									$('#tt').tabs('add',{    
+									    title:treeNode.name,   
+									    content:'<iframe src="../'+treeNode.page+'" width="100%" height="100%"> '
+									});
+								}
+							}
+							
 						}
 					}
 				};
@@ -104,7 +86,7 @@
 				<div title="面板1" >
 					<a id="btn" onclick="addTabs()" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">添加新选项</a> 
 				</div>
-				<div title="面板2" >
+				<div title="面板2"  data-options="selected:true">
 					<ul class="ztree" id="treeDemo"></ul>
 				</div>
 				<div title="面板3" >面板3</div>
