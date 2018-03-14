@@ -20,17 +20,17 @@
 				// 先将body隐藏，再显示，不会出现页面刷新效果
 				$("body").css({visibility:"visible"});
 				
-				// 收派标准信息表格
+				// 收派标准信息表格(ajax获取信息)
 				$('#grid').datagrid( {
 					iconCls : 'icon-forward',
 					fit : true,
 					border : false,
 					rownumbers : true,
 					striped : true,
-					pageList: [30,50,100],
+					pageList: [5,15,20],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/standard.json",
+					url : "../../standardAction_pageQuery.action",
 					idField : 'id',
 					columns : columns
 				});
@@ -50,7 +50,18 @@
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					alert('修改');
+					//alert('修改');
+					var result = $("#grid").datagrid("getSelections")
+					if(result.length==1){
+						// 勾选一条数据的时候,才可以进行修改
+						// 打开窗口
+						$("#standardWindow").window("open")
+						//回填数据到form表单
+						$("#standardForm").form("load",result[0])
+						
+					}else{
+						$.messager.alert("提示", "您必须也只能选择一条数据进行修改", "info")
+					}
 				}
 			},{
 				id : 'button-delete',

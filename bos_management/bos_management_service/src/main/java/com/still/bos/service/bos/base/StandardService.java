@@ -1,5 +1,7 @@
 package com.still.bos.service.bos.base;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.still.bos.domain.base.Standard;
@@ -14,6 +16,8 @@ import com.still.bos.domain.base.Standard;
 public interface StandardService {
 
     void save(Standard standard);
+
+    Page<Standard> findAll(Pageable pageable);
 
 }
   
