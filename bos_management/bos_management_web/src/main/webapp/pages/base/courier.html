@@ -21,16 +21,52 @@
 			}
 			
 			function doEdit(){
-				alert("修改...");
+				//alert('修改');
+				var result = $("#grid").datagrid("getSelections")
+				if(result.length==1){
+					// 勾选一条数据的时候,才可以进行修改
+					// 打开窗口
+					$("#addWindow").window("open")
+					//回填数据到form表单
+					$("#courierForm").form("load",result[0])
+					
+				}else{
+					$.messager.alert("提示", "您必须也只能选择一条数据进行修改", "info")
+				}
 			}
 			
 			function doDelete(){
-				alert("删除...");
+				//alert("删除...");
+				var result = $("#grid").datagrid("getSelections")
+				if(result.length==0){
+					$.messager.alert("提示", "你至少要选择一条数据进行操作", "info")
+				}else{
+					$.messager.confirm('删除对话框', '您确定要作废这些快递员吗？', function(r){
+						if (r){
+							// 创建一个数组
+							//alert(r)
+							var arr = new Array();
+							for (var i = 0; i < result.length; i++) {
+								arr.push(result[i].id)
+							}
+							//发送请求
+							window.location.href = "../../courierAction_batchDel.action?ids="
+											+ arr.toString()
+						}
+					});
+
+
+				}
 			}
 			
 			function doRestore(){
 				alert("将取派员还原...");
 			}
+			function openSearchWindow(){
+				alert("搜索...");
+			}
+			
+			
 			//工具栏
 			var toolbar = [ {
 				id : 'button-add',	
@@ -52,7 +88,13 @@
 				text : '还原',
 				iconCls : 'icon-save',
 				handler : doRestore
-			}];
+			},{
+				id : 'button-search'',
+				text : '搜索',
+				iconCls : 'icon-search'',
+				handler : openSearchWindow
+			}
+			];
 			// 定义列
 			var columns = [ [ {
 				field : 'id',
@@ -109,10 +151,10 @@
 				width : 80,
 				align : 'center',
 				formatter : function(data,row, index){
-					if(data=="0"){
-						return "正常使用"
+					if(data=="1"){
+						return "已作废"
 					}else{
-						return "已作废";
+						return "正常使用";
 					}
 				}
 			}, {
@@ -141,7 +183,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/courier.json",
+					url : "../../courierAction_pageQuery.action",
 					idField : 'id',
 					columns : columns,
 					onDblClickRow : doDblClickRow

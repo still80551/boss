@@ -89,6 +89,7 @@ public class StandardAction extends ActionSupport implements ModelDriven<Standar
      map.put("rows", list);
     
      String  json = JSONObject.fromObject(map).toString();
+     System.out.println(json+"------------------");
     HttpServletResponse response = ServletActionContext.getResponse();
     response.setContentType("application/json;charset=UTF-8");
     response.getWriter().write(json);

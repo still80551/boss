@@ -45,7 +45,7 @@ public class Courier {
     private String vehicleNum; // 车牌号
 
     @ManyToOne
-    @JoinColumn(name = "C_STANDARD_ID")
+    @JoinColumn(name = "C_STANDARD_ID" )
     private Standard standard;
 
     @ManyToOne
