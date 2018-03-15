@@ -35,6 +35,18 @@
 				}
 			}
 			
+			
+			function doSearch(){
+				
+				var result = $("#searchForm").serializeJson();
+				$('#grid').datagrid('load', result);
+			}
+			
+			
+			
+			
+			
+			
 			function doDelete(){
 				//alert("删除...");
 				var result = $("#grid").datagrid("getSelections")
@@ -62,10 +74,11 @@
 			function doRestore(){
 				alert("将取派员还原...");
 			}
-			function openSearchWindow(){
-				alert("搜索...");
-			}
 			
+			function openSearchWindow(){
+				$("#searchWindow").window("open")
+			}
+		
 			
 			//工具栏
 			var toolbar = [ {
@@ -89,12 +102,11 @@
 				iconCls : 'icon-save',
 				handler : doRestore
 			},{
-				id : 'button-search'',
+				id : 'button-search',
 				text : '搜索',
-				iconCls : 'icon-search'',
+				iconCls : 'icon-search',
 				handler : openSearchWindow
-			}
-			];
+			}];
 			// 定义列
 			var columns = [ [ {
 				field : 'id',
@@ -213,6 +225,24 @@
 					$("#courierForm").submit()
 				}
 			}
+			
+			$.fn.serializeJson=function(){  
+	            var serializeObj={};  
+	            var array=this.serializeArray();  
+	            var str=this.serialize();  
+	            $(array).each(function(){  
+	                if(serializeObj[this.name]){  
+	                    if($.isArray(serializeObj[this.name])){  
+	                        serializeObj[this.name].push(this.value);  
+	                    }else{  
+	                        serializeObj[this.name]=[serializeObj[this.name],this.value];  
+	                    }  
+	                }else{  
+	                    serializeObj[this.name]=this.value;   
+	                }  
+	            });  
+	            return serializeObj;  
+	        }; 
 		
 		</script>
 	</head>
@@ -328,7 +358,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2"><a id="searchBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
+							<td colspan="2"><a id="searchBtn" onclick="doSearch()" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
 						</tr>
 					</table>
 				</form>
