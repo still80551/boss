@@ -5,9 +5,12 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.apache.xml.resolver.helpers.PublicId;
 
 /**
  * @description:地域信息实体类，主要包含 省市区(县)
@@ -18,6 +21,7 @@ public class Area {
 
     @Id
     @Column(name = "C_ID")
+    @GeneratedValue//唯一标识的主键
     private Long id;
     @Column(name = "C_PROVINCE")
     private String province; // 省
@@ -35,6 +39,10 @@ public class Area {
     @OneToMany(mappedBy = "area")
     private Set<SubArea> subareas = new HashSet<SubArea>();
 
+    public String  getName(){
+        return province+city+district;
+    }
+    
     public Long getId() {
         return id;
     }

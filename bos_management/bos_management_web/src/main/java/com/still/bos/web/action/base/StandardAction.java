@@ -24,8 +24,10 @@ import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
+import com.still.bos.domain.base.Area;
 import com.still.bos.domain.base.Standard;
 import com.still.bos.service.bos.base.StandardService;
+import com.still.bos.web.action.CommonAction;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -42,16 +44,13 @@ import net.sf.json.JSONObject;
 @Namespace("/")
 @ParentPackage("struts-default")
 @Scope("prototype")
-public class StandardAction extends ActionSupport implements ModelDriven<Standard>{
+public class StandardAction extends CommonAction<Standard>{
 
     
-    private Standard model = new Standard();
-    
-    @Override
-    public Standard getModel() {
-          
-        return model;
-    }
+    public StandardAction() {
+
+        super(Standard.class);
+}
     
     @Autowired
     private StandardService standardService;
@@ -60,20 +59,12 @@ public class StandardAction extends ActionSupport implements ModelDriven<Standar
           ,type = "redirect")})
     public String save(){
         
-      standardService.save(model);
+      standardService.save(getModel());
         
         return SUCCESS;
         
     }
     
-  private int page;
-  private int rows;
-  public void setPage(int page) {
-    this.page = page;
-}
-  public void setRows(int rows) {
-    this.rows = rows;
-}
   
     @Action(value="standardAction_pageQuery")
     public String pageQuery() throws IOException{
@@ -81,19 +72,8 @@ public class StandardAction extends ActionSupport implements ModelDriven<Standar
      Pageable pageable = new PageRequest(page-1, rows);
     Page<Standard> page =  standardService.findAll(pageable);
         
-     long total = page.getTotalElements();  
-     List<Standard> list = page.getContent();
-     
-     Map<String, Object> map = new HashMap<>();
-     map.put("total", total);
-     map.put("rows", list);
     
-     String  json = JSONObject.fromObject(map).toString();
-     System.out.println(json+"------------------");
-    HttpServletResponse response = ServletActionContext.getResponse();
-    response.setContentType("application/json;charset=UTF-8");
-    response.getWriter().write(json);
-    
+    page2json(page, null);
     
     
         return NONE;

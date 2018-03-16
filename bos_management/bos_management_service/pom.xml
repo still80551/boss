@@ -12,5 +12,11 @@
   		<artifactId>bos_management_dao</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+
+  	<dependency>
+  		<groupId>com.still</groupId>
+  		<artifactId>stillUtils</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>
