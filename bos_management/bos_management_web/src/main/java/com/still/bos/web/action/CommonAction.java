@@ -38,7 +38,10 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T>{
     @Override
     public T getModel() {
           try {
-            model=clazz.newInstance();
+              if(model==null){
+                  
+                  model=clazz.newInstance();
+              }
         } catch (Exception e) {
             e.printStackTrace();  
             
