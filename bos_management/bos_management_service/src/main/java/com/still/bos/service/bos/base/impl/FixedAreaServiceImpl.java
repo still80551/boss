@@ -1,6 +1,8 @@
 package com.still.bos.service.bos.base.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,12 @@ public class FixedAreaServiceImpl implements FixedAreaService {
     public void save(FixedArea model) {
 
         fixedAreaRepository.save(model);
+    }
+
+    @Override
+    public Page<FixedArea> findAll(Pageable pageable) {
+          
+        return fixedAreaRepository.findAll(pageable);
     }
 
 }

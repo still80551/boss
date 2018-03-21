@@ -1,5 +1,8 @@
 package com.still.bos.service.bos.base;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.still.bos.domain.base.FixedArea;
 
 /**  
@@ -10,6 +13,8 @@ import com.still.bos.domain.base.FixedArea;
 public interface FixedAreaService {
 
     void save(FixedArea model);
+
+    Page<FixedArea> findAll(Pageable pageable);
 
 }
   

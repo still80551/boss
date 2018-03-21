@@ -32,20 +32,21 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T>{
     
     public CommonAction(Class<T> clazz) {
         this.clazz = clazz;
+        try {
+            
+                
+                model=clazz.newInstance();
+            
+      } catch (Exception e) {
+          e.printStackTrace();  
+          
+      }
 
     }
      
     @Override
     public T getModel() {
-          try {
-              if(model==null){
-                  
-                  model=clazz.newInstance();
-              }
-        } catch (Exception e) {
-            e.printStackTrace();  
-            
-        }
+          
         return model;
     }
     
@@ -82,7 +83,7 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T>{
     }
     
     
-public void list2json(List<T> list,JsonConfig jsonConfig) throws IOException{
+public void list2json(List list,JsonConfig jsonConfig) throws IOException{
         
       
         String json;
