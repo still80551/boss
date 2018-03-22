@@ -46,14 +46,14 @@ public class Courier {
 
     @ManyToOne
     @JoinColumn(name = "C_STANDARD_ID" )
-    private Standard standard;
+    private Standard standard;//收派标准
 
     @ManyToOne
     @JoinColumn(name = "C_TAKETIME_ID")
-    private TakeTime takeTime;
+    private TakeTime takeTime;//收派时间管理
 
-    @ManyToMany(mappedBy = "couriers")
-    private Set<FixedArea> fixedAreas = new HashSet<FixedArea>();
+    @ManyToMany(mappedBy = "couriers")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+    private Set<FixedArea> fixedAreas = new HashSet<FixedArea>();//定区
 
     public Long getId() {
         return id;

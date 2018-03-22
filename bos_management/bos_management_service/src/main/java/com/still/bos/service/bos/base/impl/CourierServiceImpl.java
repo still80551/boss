@@ -1,5 +1,7 @@
 package com.still.bos.service.bos.base.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -50,6 +52,14 @@ public class CourierServiceImpl implements CourierService{
             }
         }
         
+    }
+
+    
+    
+    @Override
+    public List<Courier> findAvalible() {
+          
+        return courierRepository.findByDeltagIsNull();
     }
 
   
