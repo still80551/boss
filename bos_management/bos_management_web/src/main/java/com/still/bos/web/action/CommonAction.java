@@ -33,10 +33,9 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T>{
     public CommonAction(Class<T> clazz) {
         this.clazz = clazz;
         try {
-            
-                
-                model=clazz.newInstance();
-            
+                if(model==null){
+                    model=clazz.newInstance();
+                }
       } catch (Exception e) {
           e.printStackTrace();  
           

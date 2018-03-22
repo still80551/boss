@@ -1,9 +1,10 @@
 package com.still.bos.web.action.base;
 
 import java.io.IOException;
-import java.util.Collection;
+
 import java.util.List;
 
+import javax.jws.WebParam.Mode;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -18,11 +19,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
-import com.still.bos.domain.base.Customer;
+
 import com.still.bos.domain.base.FixedArea;
-import com.still.bos.domain.base.Standard;
+
 import com.still.bos.service.bos.base.FixedAreaService;
 import com.still.bos.web.action.CommonAction;
+import com.still.crm.domain.Customer;
 
 import net.sf.json.JsonConfig;
 
@@ -112,7 +114,68 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
     public void setCustomerIds(Long[] customerIds) {
         this.customerIds = customerIds;
     }
-    
+ 
+      // 向CRM系统发起请求,关联客户
+      @Action(value = "fixedAreaAction_assignCustomers2FixedArea" 
+              ,results = {@Result(name="success" 
+              ,location="/pages/base/fixed_area.html"
+              ,type = "redirect")})
+     public String assignCustomers2FixedArea() throws IOException{
+            
+             WebClient
+            .create("http://localhost:8380/crm/webService/customerService/assignCustomers2FixedArea")
+            .query("fixedAreaId", getModel().getId())
+            .query("customerIds", customerIds)
+            .type(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .put(null);
+            
+            return SUCCESS;
+            
+        }
+   // 使用属性驱动获取快递员和时间的ID
+      private Long courierId;
+      private Long takeTimeId;
+      
+      public void setCourierId(Long courierId) {
+        this.courierId = courierId;
+    }
+      public void setTakeTimeId(Long takeTimeId) {
+        this.takeTimeId = takeTimeId;
+    }
+      
+      @Action(value = "fixedAreaAction_associationCourierToFixedArea" 
+              ,results = {@Result(name="success" ,location="/pages/base/fixed_area.html"
+      ,type = "redirect")})
+      public String associationCourierToFixedArea(){
+         
+          fixedAreaService.associationCourierToFixedArea(getModel().getId(),courierId,takeTimeId);
+          
+          return SUCCESS;
+          
+      }
+      
+      
+      private Long[] subareaIds;
+      public void setSubareaIds(Long[] subareaIds) {
+        this.subareaIds = subareaIds;
+    }
+      
+      
+     //保存定区关联分区
+      @Action(value = "fixedAreaAction_assignSubarea2FixedArea" 
+              ,results = {@Result(name="success" 
+              ,location="/pages/base/fixed_area.html"
+              ,type = "redirect")})
+     public String assignSubarea2FixedArea() throws IOException{
+          fixedAreaService.assignSubarea2FixedArea(getModel().getId(),subareaIds);
+          
+          
+        return SUCCESS;
+          
+      }
+      
+      
         
 }
   
