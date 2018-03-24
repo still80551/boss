@@ -2,10 +2,14 @@ package com.still.crm.service.impl;
 
 import java.util.List;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import com.still.crm.dao.CustomerRepository;
 import com.still.crm.domain.Customer;
@@ -59,7 +63,27 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    @Override
+    public void save(Customer customer) {
+          
+        customerRepository.save(customer);
+    }
+
+    @Override
+    public void active(String telephone) {
+          
+        customerRepository.active(telephone);
+    }
+
+    @Override
+    public Customer isActived(String telephone) {
+          
+       return customerRepository.findByTelephone(telephone); 
+        
+    }
+
     
+   
     
     
 }
