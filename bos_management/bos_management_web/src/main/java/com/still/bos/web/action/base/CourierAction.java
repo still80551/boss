@@ -1,7 +1,5 @@
 package com.still.bos.web.action.base;
 
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,151 +27,178 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 
-
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ModelDriven;
 import com.still.bos.domain.base.Courier;
 import com.still.bos.domain.base.Standard;
 import com.still.bos.service.bos.base.CourierService;
 import com.still.bos.web.action.CommonAction;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
 
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
-/**  
- * ClassName:CourierAction <br/>  
- * Function:  <br/>  
- * Date:     2018年3月14日 下午9:05:44 <br/>       
+/**
+ * ClassName:CourierAction <br/>
+ * Function: <br/>
+ * Date: 2018年3月14日 上午11:37:22 <br/>
  */
-
-
-@Controller
 @Namespace("/")
 @ParentPackage("struts-default")
+@Controller
 @Scope("prototype")
-public class CourierAction extends CommonAction<Courier>{
+public class CourierAction extends CommonAction<Courier> {
 
     public CourierAction() {
-          
-        super(Courier.class);  
-        
+        super(Courier.class);
     }
 
-   
     @Autowired
     private CourierService courierService;
-    
-    @Action(value = "courierAction_save" ,results = {@Result(name="success" ,location="/pages/base/courier.html"
-            ,type = "redirect")})
-    public String save(){
-        
+
+    @Action(value = "courierAction_save", results = {@Result(name = "success",
+            location = "/pages/base/courier.html", type = "redirect")})
+    public String save() {
+
         courierService.save(getModel());
         return SUCCESS;
-        
     }
-    
-    
-    @Action(value="courierAction_pageQuery")
-    public String pageQuery() throws IOException{
-        Specification<Courier> specification = new Specification<Courier>() {
 
+    @Action("courierAction_pageQuery")
+    public String pageQuery() throws IOException {
+
+        Specification<Courier> specification = new Specification<Courier>() {
+            /**
+             * 创建一个查询的where语句
+             * 
+             * @param root : 根对象.可以简单的认为就是泛型对象
+             * @param cb : 构建查询条件
+             * @return a {@link Predicate}, must not be {@literal null}.
+             */
             @Override
-            public Predicate toPredicate(Root<Courier> root, CriteriaQuery<?> query,
-                    CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Courier> root,
+                    CriteriaQuery<?> query, CriteriaBuilder cb) {
+
                 String courierNum = getModel().getCourierNum();
                 String company = getModel().getCompany();
                 String type = getModel().getType();
                 Standard standard = getModel().getStandard();
-
-                
-                ArrayList<Predicate> list = new ArrayList<>();
-                if(StringUtils.isNotEmpty(courierNum)){
-                    Predicate p1 = cb.equal(root.get("courierNum").as(String.class), courierNum);
+                // 存储条件的集合
+                List<Predicate> list = new ArrayList<>();
+                if (StringUtils.isNotEmpty(courierNum)) {
+                    // 如果工号不为空,构建一个等值查询条件
+                    // where courierNum = "001"
+                    // 参数二 : 具体的要比较的值
+                    Predicate p1 =
+                            cb.equal(root.get("courierNum").as(String.class),
+                                    courierNum);
                     list.add(p1);
                 }
-                
-                
-                if(StringUtils.isNoneEmpty(company)){
-                    Predicate p2 = cb.like(root.get("company").as(String.class),"%"+company+"%");
+                if (StringUtils.isNotEmpty(company)) {
+                    // 如果公司不为空,构建一个模糊查询条件
+                    // where company like "001"
+                    // 参数二 : 具体的要比较的值
+                    Predicate p2 = cb.like(root.get("company").as(String.class),
+                            "%" + company + "%");
                     list.add(p2);
                 }
-                
-                
-                if(StringUtils.isNotEmpty(type)){
-                    Predicate p3 = cb.equal(root.get("type").as(String.class), type);
+                if (StringUtils.isNotEmpty(type)) {
+                    // 如果类型不为空,构建一个等值查询条件
+                    // where courierNum = "001"
+                    // 参数二 : 具体的要比较的值
+                    Predicate p3 =
+                            cb.equal(root.get("type").as(String.class), type);
                     list.add(p3);
                 }
-                
-                if(standard != null){
+
+                if (standard != null) {
                     String name = standard.getName();
-                    if(StringUtils.isNotEmpty(name)){
-                        // 连表查询
+                    if (StringUtils.isNotEmpty(name)) {
+                        // 连表查询,查询标准的名字
                         Join<Object, Object> join = root.join("standard");
-                        Predicate p4 = cb.equal(join.get("name").as(String.class), name);
+                        Predicate p4 = cb
+                                .equal(join.get("name").as(String.class), name);
                         list.add(p4);
                     }
                 }
-                
-             // 用户没有输入查询条件
-                if(list.size()==0){
+                // 用户没有输入查询条件
+                if (list.size() == 0) {
                     return null;
                 }
-                
-             // 构造数组
-                Predicate[] arr =  new Predicate[list.size()];
-                list.toArray(arr);
-                
-                //把所有条件并列添加进去(同时满足)
-                return cb.and(arr);
-            }
-            
-            
-        };
-        
-     Pageable pageable = new PageRequest(page-1, rows);
-    Page<Courier> page =  courierService.findAll(specification,pageable);
-        
-    
-     
-    JsonConfig jsonConfig = new JsonConfig();
-    jsonConfig.setExcludes(new String[] {"fixedAreas", "takeTime"});
-   
-    page2json(page, jsonConfig);
-    
-        return NONE;
 
-}
-    
+                // 用户输入了查询条件
+                // 将多个条件进行组合
+                Predicate[] arr = new Predicate[list.size()];
+                list.toArray(arr);
+                // 用户输入了多少个条件,就让多少个条件同时都满足
+                Predicate predicate = cb.and(arr);
+
+                return predicate;
+            }
+        };
+
+        Pageable pageable = new PageRequest(page - 1, rows);
+
+        Page<Courier> page = courierService.findAll(specification, pageable);
+
+        // 灵活控制输出的内容
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"fixedAreas", "takeTime"});
+
+        page2json(page, jsonConfig);
+        return NONE;
+    }
+
+    // 使用属性驱动获取要删除的快递员的Id
     private String ids;
+
     public void setIds(String ids) {
         this.ids = ids;
     }
-    
-    @Action(value = "courierAction_batchDel" ,results = {@Result(name="success" ,location="/pages/base/courier.html"
-            ,type = "redirect")})
-    public String batchDel(){
-        
-        
+
+    // 批量删除
+    @Action(value = "courierAction_batchDel",
+            results = {@Result(name = "success",
+                    location = "/pages/base/courier.html", type = "redirect")})
+    public String batchDel() {
         courierService.batchDel(ids);
-        
-        
         return SUCCESS;
-        
     }
-   
-    @Action(value = "courierAction_findAvalible" )
-    public String findAvalible() throws IOException{
-        
-        
-        List<Courier> list = courierService.findAvalible();
+
+    @Action("courierAction_listajax")
+    public String listajax() throws IOException {
+        // 查询所有的在职的快递员
+
+        Specification<Courier> specification = new Specification<Courier>() {
+
+            @Override
+            public Predicate toPredicate(Root<Courier> root,
+                    CriteriaQuery<?> query, CriteriaBuilder cb) {
+                // 比较空值
+                Predicate predicate =
+                        cb.isNull(root.get("deltag").as(Character.class));
+
+                return predicate;
+            }
+        };
+        Page<Courier> p = courierService.findAll(specification, null);
+        List<Courier> list = p.getContent();
+
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"fixedAreas", "takeTime"});
         list2json(list, jsonConfig);
-        
-        
         return NONE;
-        
     }
-    
-  
+
+    @Action("courierAction_listajax2")
+    public String listajax2() throws IOException {
+        // 查询所有的在职的快递员
+
+        List<Courier> list = courierService.findAvalible();
+
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"fixedAreas", "takeTime"});
+        list2json(list, jsonConfig);
+        return NONE;
+    }
+
 }

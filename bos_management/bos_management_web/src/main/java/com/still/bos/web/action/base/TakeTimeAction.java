@@ -17,38 +17,34 @@ import com.still.bos.web.action.CommonAction;
 
 import net.sf.json.JsonConfig;
 
-/**  
- * ClassName:TakeTimeAction <br/>  
- * Function:  <br/>  
- * Date:     2018年3月22日 下午4:04:25 <br/>       
+/**
+ * ClassName:TakeTimeAction <br/>
+ * Function: <br/>
+ * Date: 2018年3月19日 上午8:52:45 <br/>
  */
-
-@Controller
-@Namespace("/")
-@ParentPackage("struts-default")
+@Namespace("/") // 等价于struts.xml文件中package节点namespace属性
+@ParentPackage("struts-default") // 等价于struts.xml文件中package节点extends属性
+@Controller // spring 的注解,控制层代码
 @Scope("prototype")
 public class TakeTimeAction extends CommonAction<TakeTime> {
 
     public TakeTimeAction() {
-          
-        super(TakeTime.class);  
+
+        super(TakeTime.class);
+
     }
-    
+
     @Autowired
     private TakeTimeService takeTimeService;
-    
-    @Action(value = "takeTimeAction_findAll" )
-    public String findAll() throws IOException{
-        
-        
+
+    @Action("takeTimeAction_listajax")
+    public String listajax() throws IOException {
+        // 查询所有的在职的快递员
+
         List<TakeTime> list = takeTimeService.findAll();
-        
+
         list2json(list, null);
-        
         return NONE;
-        
     }
-    
 
 }
-  

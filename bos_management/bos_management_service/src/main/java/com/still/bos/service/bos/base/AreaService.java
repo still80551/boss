@@ -17,7 +17,7 @@ import com.still.bos.domain.base.Area;
 
 public interface AreaService {
 
-    void save(ArrayList<Area> list);
+    void save(List<Area> list);
 
     Page<Area> findAll(Pageable pageable);
 

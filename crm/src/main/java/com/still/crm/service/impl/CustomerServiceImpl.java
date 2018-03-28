@@ -83,6 +83,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     
+    //根据
+    @Override
+    public String findFixedAreaIdByAddress(String address) {
+        
+        return customerRepository.findFixedAreaIdByAddress(address);
+    }
+
+    
    
     
     

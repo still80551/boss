@@ -44,16 +44,19 @@ public interface CustomerService {
     //注册用户
     @POST
     @Path("/save")
-    public void save(Customer customer);
+    void save(Customer customer);
     
     @PUT
     @Path("/active")
-    public void active(@QueryParam("telephone")String  telephone);
+    void active(@QueryParam("telephone")String  telephone);
     
     @GET
     @Path("/isActived")
-    public Customer isActived(@QueryParam("telephone")String telephone);
+    Customer isActived(@QueryParam("telephone")String telephone);
     
-    
+    // 根据地址查询定区ID
+    @GET
+    @Path("/findFixedAreaIdByAddress")
+    String findFixedAreaIdByAddress(@QueryParam("address")String address);
 }
   

@@ -1,6 +1,6 @@
 package com.still.bos.service.bos.base.impl;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,7 @@ public class AreaServiceImpl implements AreaService {
     @Autowired
     private AreaRepository areaRepository;
     
-    @Override
-    public void save(ArrayList<Area> list) {
-          
-        areaRepository.save(list);
-    }
+   
 
     @Override
     public Page<Area> findAll(Pageable pageable) {
@@ -44,6 +40,13 @@ public class AreaServiceImpl implements AreaService {
         
         q = "%" + q.toUpperCase() + "%";
         return  areaRepository.findByQ(q);
+    }
+
+    @Override
+    public void save(List<Area> list) {
+          
+        areaRepository.save(list);  
+        
     }
 
     
