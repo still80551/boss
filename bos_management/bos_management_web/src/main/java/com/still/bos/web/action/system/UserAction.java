@@ -88,5 +88,20 @@ public class UserAction extends CommonAction<User> {
 
         return LOGIN;
     }
+    
+    
+    @Action(value = "userAction_logout",
+            results = {
+                    @Result(name = "success", location = "/login.html",
+                            type = "redirect")})
+    public String logout() {
+        //执行注销
+        SecurityUtils.getSubject().logout();
+        //清空session
+        ServletActionContext.getRequest().getSession().removeAttribute("user");
+        
+        return SUCCESS;
+        
+    }
 
 }
