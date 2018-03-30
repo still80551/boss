@@ -1,4 +1,5 @@
 package com.still.bos.domain.system;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "T_ROLE")
-public class Role {
+public class Role implements Serializable{
     @Id
     @GeneratedValue
     @Column(name = "C_ID")
@@ -47,6 +48,10 @@ public class Role {
                     referencedColumnName = "C_ID")})
     private Set<Menu> menus = new HashSet<Menu>(0);
 
+   
+    
+    
+    
     public Long getId() {
         return id;
     }

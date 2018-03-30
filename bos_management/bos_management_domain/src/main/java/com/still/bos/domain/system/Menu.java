@@ -1,10 +1,12 @@
 package com.still.bos.domain.system;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -18,7 +20,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "T_MENU")
-public class Menu {
+public class Menu implements Serializable{
     @Id
     @GeneratedValue
     @Column(name = "C_ID")
@@ -35,13 +37,27 @@ public class Menu {
     @ManyToMany(mappedBy = "menus")
     private Set<Role> roles = new HashSet<Role>(0);
 
-    @OneToMany(mappedBy = "parentMenu")
+    @OneToMany(mappedBy = "parentMenu" ,fetch=FetchType.EAGER)
     private Set<Menu> childrenMenus = new HashSet<Menu>();
 
     @ManyToOne
-    @JoinColumn(name = "C_PID")
+    @JoinColumn(name = "C_PID" )
     private Menu parentMenu;
 
+    
+    public String getText() {
+        
+        return name;
+    }
+    
+ public Set<Menu> getChildren() {
+        
+        return childrenMenus;
+    }
+   
+    
+    
+    
     public Long getId() {
         return id;
     }
