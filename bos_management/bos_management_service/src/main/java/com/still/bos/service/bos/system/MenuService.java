@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.still.bos.domain.base.Area;
 import com.still.bos.domain.system.Menu;
+import com.still.bos.domain.system.User;
 
 /**  
  * ClassName:MenuService <br/>  
@@ -20,6 +21,8 @@ public interface MenuService {
     void save(Menu model);
 
     Page<Menu> findAll(Pageable pageable);
+
+    List<Menu> findbyUser(User user);
 
 }
   

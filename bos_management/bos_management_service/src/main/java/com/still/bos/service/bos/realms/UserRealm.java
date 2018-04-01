@@ -1,17 +1,28 @@
 package com.still.bos.service.bos.realms;
 
+
+
+import java.util.List;
+
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.still.bos.dao.system.PermissionRepository;
+import com.still.bos.dao.system.RoleRepository;
 import com.still.bos.dao.system.UserRepository;
+import com.still.bos.domain.system.Permission;
+import com.still.bos.domain.system.Role;
 import com.still.bos.domain.system.User;
 
 /**  
@@ -25,12 +36,43 @@ public class UserRealm extends AuthorizingRealm {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private PermissionRepository permissionRepository;
+    
     
     //授权
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection arg0) {
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection pricipals) {
 
-        return null;
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if("admin".equals(user.getUsername())){
+            // 内置管理员的权限和角色是写死的
+            // 角色其实是权限的集合,并不是所有的权限都会包含在某一个角色中
+            List<Role> roles = roleRepository.findAll();
+            for (Role role : roles) {
+                info.addRole(role.getKeyword());
+            }
+            List<Permission> permissions = permissionRepository.findAll();
+            for (Permission permission : permissions) {
+                info.addStringPermission(permission.getKeyword());
+            }
+        }else{
+            List<Role> roles =  roleRepository.findbyUid(user.getId());
+            for (Role role : roles) {
+                info.addRole(role.getKeyword());
+            }
+            List<Permission> permissions = permissionRepository.findbyUid(user.getId());
+            for (Permission permission : permissions) {
+                info.addStringPermission(permission.getKeyword());
+            }
+        }
+        
+        return info;
     }
     
     //认证

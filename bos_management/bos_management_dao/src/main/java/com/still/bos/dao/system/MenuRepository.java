@@ -2,9 +2,13 @@ package com.still.bos.dao.system;
 
 import java.util.List;
 
+import javax.persistence.criteria.Join;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.still.bos.domain.system.Menu;
+import com.still.bos.domain.system.User;
 
 /**  
  * ClassName:MenuRepository <br/>  
@@ -14,6 +18,10 @@ import com.still.bos.domain.system.Menu;
 public interface MenuRepository extends JpaRepository<Menu, Long>{
 
     List<Menu> findByParentMenuIsNull();
+
+    
+    @Query("select m  from Menu m inner join m.roles r inner join r.users u where u.id = ?")
+    List<Menu> findbyUser(Long id);
 
 }
   

@@ -117,6 +117,7 @@
 				/js/** = anon
 				/validatecode.jsp* = anon
 				/userAction_login.action = anon
+				/courierAction_pageQuery.action = perms["courierAction_pageQuery"]
 				/** = authc
 			</value>
 		</property>
@@ -125,8 +126,16 @@
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<!-- 注入realm -->
 		<property name="realm" ref="userRealm"></property>
+		<!-- 注入缓存管理器 -->
+		<property name="cacheManager" ref="cacheManager"></property>
 	</bean>
 	
+	<!-- 注册缓存管理器 -->
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<!-- 指定配置文件的位置 -->
+		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"></property>
+	</bean>
 	
-	
+			
+			
 </beans>

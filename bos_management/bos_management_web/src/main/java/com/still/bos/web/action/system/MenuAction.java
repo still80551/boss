@@ -3,10 +3,13 @@ package com.still.bos.web.action.system;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.bouncycastle.jce.provider.JDKDSASigner.noneDSA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Controller;
 
 import com.still.bos.domain.base.Area;
 import com.still.bos.domain.system.Menu;
+import com.still.bos.domain.system.User;
 import com.still.bos.service.bos.system.MenuService;
 import com.still.bos.web.action.CommonAction;
 
@@ -86,6 +90,34 @@ public class MenuAction extends CommonAction<Menu>{
         return NONE;
         
     }
+    
+    @Action(value = "menuAction_findbyUser")
+    public String findbyUser() throws IOException {
+        
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        List<Menu> list = menuService.findbyUser(user);
+      
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"roles","childrenMenus","parentMenu","children"});
+        list2json(list, jsonConfig);
+        
+        return NONE;
+        
+    }
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 }
   

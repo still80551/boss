@@ -15,6 +15,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.xml.resolver.helpers.PublicId;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+import org.springframework.jdbc.core.metadata.GenericTableMetaDataProvider;
+
 /**
  * @description:菜单
  */
@@ -49,6 +53,25 @@ public class Menu implements Serializable{
         
         return name;
     }
+    
+    //一级菜单
+    public Long getpId(){
+        
+        if(parentMenu == null){
+            return 0L;
+        }
+        
+        return parentMenu.getId();
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
  public Set<Menu> getChildren() {
         
