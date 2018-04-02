@@ -170,7 +170,6 @@ public class AreaAction extends CommonAction<Area> {
     }
     
     //导出excel
-    @SuppressWarnings("resource")
     @Action(value = "areaAction_exportExcel")
     public String exportExcel() throws IOException {
         
@@ -235,10 +234,20 @@ public class AreaAction extends CommonAction<Area> {
         
     }
     
-    
-    
-    
-    
-    
+    //导出图表
+    @Action(value = "areaAction_exportCharts")
+    public String exportCharts() throws IOException {
+        
+        List<Object[]> list = areaService.exportCharts();
+        list2json(list, null);
+        
+        
+        return NONE;
+        
+        
+        
+    }
+        
+   
     
 }

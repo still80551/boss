@@ -49,6 +49,13 @@ public class AreaServiceImpl implements AreaService {
         
     }
 
+    @Override
+    public List<Object[]> exportCharts() {
+        
+        
+        return areaRepository.exportCharts();
+    }
+
     
    
     

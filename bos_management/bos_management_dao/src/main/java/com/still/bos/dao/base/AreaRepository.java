@@ -1,5 +1,6 @@
 package com.still.bos.dao.base;
 
+
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +20,10 @@ public interface AreaRepository extends JpaRepository<Area , Long>{
     List<Area> findByQ(String q);
 
     Area findByProvinceAndCityAndDistrict(String province, String city, String district);
+
+    
+    @Query("select a.province , count(*) from Area a group by a.province")
+    List<Object[]> exportCharts();
 
     
 
